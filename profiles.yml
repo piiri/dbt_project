@@ -3,6 +3,9 @@ dbt_project:
   outputs:
     dev:
       type: snowflake
+      account: lga76011.us-east-1
+      user: PCHAUHAN@PHDATA.IO
+      authenticator: externalbrowser
       role: CORTEX_CODE_HOL
       warehouse: CORTEX_CODE_HOL
       database: HEALTHCARE_DW

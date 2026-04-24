@@ -184,3 +184,144 @@ models:
           - not_null
           - accepted_values:
               values: ['Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled']
+
+  # ── Dimension Tables ──────────────────────────────
+
+  - name: dim_date
+    description: Calendar date dimension for 2025
+    columns:
+      - name: date_key
+        tests:
+          - unique
+          - not_null
+      - name: year
+        tests:
+          - not_null
+      - name: month
+        tests:
+          - not_null
+
+  - name: dim_patients
+    description: Current patient dimension (from SCD2, current records only)
+    columns:
+      - name: patient_key
+        tests:
+          - unique
+          - not_null
+      - name: PATIENT_ID
+        tests:
+          - unique
+          - not_null
+      - name: full_name
+        tests:
+          - not_null
+      - name: GENDER
+        tests:
+          - accepted_values:
+              values: ['Male', 'Female']
+
+  - name: dim_doctors
+    description: Current doctor dimension (from SCD2, current records only)
+    columns:
+      - name: doctor_key
+        tests:
+          - unique
+          - not_null
+      - name: DOCTOR_ID
+        tests:
+          - unique
+          - not_null
+      - name: full_name
+        tests:
+          - not_null
+      - name: SPECIALIZATION
+        tests:
+          - not_null
+
+  - name: dim_diagnosis
+    description: Distinct ICD-10 diagnosis codes from consultations
+    columns:
+      - name: diagnosis_key
+        tests:
+          - unique
+          - not_null
+      - name: DIAGNOSIS_CODE
+        tests:
+          - unique
+          - not_null
+
+  # ── Fact Tables ────────────────────────────────────
+
+  - name: fct_consultations
+    description: Fact table — one row per consultation with prescription metrics
+    columns:
+      - name: CONSULTATION_ID
+        tests:
+          - unique
+          - not_null
+      - name: patient_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_patients')
+              field: patient_key
+      - name: doctor_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_doctors')
+              field: doctor_key
+      - name: date_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+      - name: CONSULTATION_TYPE
+        tests:
+          - accepted_values:
+              values: ['In-Person', 'Online']
+      - name: prescription_count
+        tests:
+          - not_null
+      - name: DURATION_MINUTES
+        tests:
+          - not_null
+
+  - name: fct_orders
+    description: Fact table — one row per medicine order with payment and insurance details
+    columns:
+      - name: ORDER_ID
+        tests:
+          - unique
+          - not_null
+      - name: patient_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_patients')
+              field: patient_key
+      - name: doctor_key
+        tests:
+          - relationships:
+              to: ref('dim_doctors')
+              field: doctor_key
+      - name: date_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+      - name: diagnosis_key
+        tests:
+          - relationships:
+              to: ref('dim_diagnosis')
+              field: diagnosis_key
+      - name: TOTAL_AMOUNT
+        tests:
+          - not_null
+      - name: ORDER_STATUS
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled']
