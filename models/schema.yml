@@ -1,0 +1,186 @@
+version: 2
+
+models:
+  - name: stg_patients
+    description: Cleaned patient demographics with computed age
+    columns:
+      - name: PATIENT_ID
+        tests:
+          - unique
+          - not_null
+      - name: GENDER
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Male', 'Female']
+      - name: INSURANCE_PROVIDER
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Star Health', 'ICICI Lombard', 'HDFC ERGO', 'Max Bupa', 'Bajaj Allianz', 'New India Assurance']
+      - name: INSURANCE_PLAN
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Gold', 'Silver', 'Platinum']
+      - name: BLOOD_GROUP
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+
+  - name: stg_doctors
+    description: Cleaned doctor directory with full name
+    columns:
+      - name: DOCTOR_ID
+        tests:
+          - unique
+          - not_null
+      - name: SPECIALIZATION
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Cardiology', 'Dermatology', 'General Medicine', 'Orthopedics', 'Psychiatry', 'Pediatrics', 'ENT', 'Gynecology', 'Neurology', 'Diabetology']
+      - name: CONSULTATION_FEE
+        tests:
+          - not_null
+      - name: LICENSE_NUMBER
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_consultations
+    description: Patient-doctor consultation events
+    columns:
+      - name: CONSULTATION_ID
+        tests:
+          - unique
+          - not_null
+      - name: PATIENT_ID
+        tests:
+          - not_null
+          - relationships:
+              to: source('healthcare_raw', 'patients')
+              field: PATIENT_ID
+      - name: DOCTOR_ID
+        tests:
+          - not_null
+          - relationships:
+              to: source('healthcare_raw', 'doctors')
+              field: DOCTOR_ID
+      - name: CONSULTATION_TYPE
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['In-Person', 'Online']
+
+  - name: stg_prescriptions
+    description: Medicines prescribed during consultations
+    columns:
+      - name: PRESCRIPTION_ID
+        tests:
+          - unique
+          - not_null
+      - name: CONSULTATION_ID
+        tests:
+          - not_null
+          - relationships:
+              to: source('healthcare_raw', 'consultations')
+              field: CONSULTATION_ID
+      - name: PATIENT_ID
+        tests:
+          - not_null
+      - name: MEDICINE_NAME
+        tests:
+          - not_null
+
+  - name: stg_orders
+    description: Medicine orders with delivery tracking
+    columns:
+      - name: ORDER_ID
+        tests:
+          - unique
+          - not_null
+      - name: ORDER_STATUS
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled']
+      - name: DELIVERY_TYPE
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Home Delivery', 'Store Pickup']
+      - name: TOTAL_AMOUNT
+        tests:
+          - not_null
+
+  - name: stg_payments
+    description: Payment transactions with insurance breakdown
+    columns:
+      - name: PAYMENT_ID
+        tests:
+          - unique
+          - not_null
+      - name: PAYMENT_METHOD
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['UPI', 'Credit Card', 'Debit Card', 'Cash', 'Net Banking']
+      - name: PAYMENT_STATUS
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Success', 'Pending', 'Refunded', 'Failed']
+      - name: AMOUNT
+        tests:
+          - not_null
+
+  - name: scd2_patients
+    description: SCD Type 2 — full change history for patient demographics
+    columns:
+      - name: scd_key
+        tests:
+          - unique
+          - not_null
+      - name: PATIENT_ID
+        tests:
+          - not_null
+      - name: valid_from
+        tests:
+          - not_null
+      - name: is_current
+        tests:
+          - accepted_values:
+              values: [true, false]
+
+  - name: scd2_doctors
+    description: SCD Type 2 — full change history for doctor directory
+    columns:
+      - name: scd_key
+        tests:
+          - unique
+          - not_null
+      - name: DOCTOR_ID
+        tests:
+          - not_null
+      - name: valid_from
+        tests:
+          - not_null
+      - name: is_current
+        tests:
+          - accepted_values:
+              values: [true, false]
+
+  - name: scd1_orders
+    description: SCD Type 1 — latest order status (overwrite)
+    columns:
+      - name: ORDER_ID
+        tests:
+          - unique
+          - not_null
+      - name: ORDER_STATUS
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled']

@@ -1,0 +1,76 @@
+version: 2
+
+sources:
+  - name: healthcare_raw
+    database: HEALTHCARE_DW
+    schema: RAW
+    description: Raw data from digital healthcare platform source systems
+
+    tables:
+      - name: patients
+        description: Patient registration and demographic data. Changes over time (address, insurance, phone).
+        columns:
+          - name: PATIENT_ID
+            description: Unique patient identifier (business key)
+          - name: INSURANCE_PROVIDER
+            description: Current insurance provider - changes trigger SCD2
+          - name: INSURANCE_PLAN
+            description: Insurance plan tier (Gold, Silver, Platinum)
+          - name: CITY
+            description: Patient city - changes trigger SCD2
+          - name: LAST_UPDATED
+            description: Timestamp of last record update
+
+      - name: doctors
+        description: Doctor/physician directory. Clinic and specialization change over time.
+        columns:
+          - name: DOCTOR_ID
+            description: Unique doctor identifier (business key)
+          - name: SPECIALIZATION
+            description: Medical specialization - changes trigger SCD2
+          - name: CLINIC_NAME
+            description: Current clinic/hospital name
+          - name: CONSULTATION_FEE
+            description: Current consultation fee
+          - name: LAST_UPDATED
+            description: Timestamp of last record update
+
+      - name: consultations
+        description: Patient-doctor consultation events (in-person and online)
+        columns:
+          - name: CONSULTATION_ID
+            description: Unique consultation identifier
+          - name: DIAGNOSIS_CODE
+            description: ICD-10 diagnosis code
+          - name: CONSULTATION_TYPE
+            description: In-Person or Online
+
+      - name: prescriptions
+        description: Medicines prescribed during consultations
+        columns:
+          - name: PRESCRIPTION_ID
+            description: Unique prescription identifier
+          - name: CONSULTATION_ID
+            description: FK to consultations
+          - name: MEDICINE_NAME
+            description: Prescribed medicine name
+
+      - name: orders
+        description: Medicine orders placed by patients. Status changes over time (Placed → Processing → Shipped → Delivered/Cancelled).
+        columns:
+          - name: ORDER_ID
+            description: Unique order identifier (business key)
+          - name: ORDER_STATUS
+            description: Current order status - overwrites previous (SCD1)
+          - name: LAST_UPDATED
+            description: Timestamp of last status change
+
+      - name: payments
+        description: Payment transactions for medicine orders
+        columns:
+          - name: PAYMENT_ID
+            description: Unique payment identifier
+          - name: PAYMENT_METHOD
+            description: UPI, Credit Card, Debit Card, Cash, Net Banking
+          - name: PAYMENT_STATUS
+            description: Success, Pending, Refunded, Failed

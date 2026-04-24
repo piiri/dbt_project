@@ -1,0 +1,22 @@
+SELECT
+    PATIENT_ID,
+    FIRST_NAME,
+    LAST_NAME,
+    FIRST_NAME || ' ' || LAST_NAME AS full_name,
+    DATE_OF_BIRTH,
+    DATEDIFF('year', DATE_OF_BIRTH, CURRENT_DATE()) AS age,
+    GENDER,
+    PHONE,
+    EMAIL,
+    ADDRESS_LINE1,
+    CITY,
+    STATE,
+    PIN_CODE,
+    INSURANCE_PROVIDER,
+    INSURANCE_PLAN,
+    BLOOD_GROUP,
+    EMERGENCY_CONTACT,
+    REGISTRATION_DATE,
+    LAST_UPDATED,
+    IS_ACTIVE
+FROM {{ source('healthcare_raw', 'patients') }}

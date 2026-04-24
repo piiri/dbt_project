@@ -1,0 +1,10 @@
+dbt_project:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      role: CORTEX_CODE_HOL
+      warehouse: CORTEX_CODE_HOL
+      database: HEALTHCARE_DW
+      schema: ANALYTICS
+      threads: 4

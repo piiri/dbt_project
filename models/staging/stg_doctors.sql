@@ -1,0 +1,20 @@
+SELECT
+    DOCTOR_ID,
+    FIRST_NAME,
+    LAST_NAME,
+    'Dr. ' || FIRST_NAME || ' ' || LAST_NAME AS full_name,
+    SPECIALIZATION,
+    QUALIFICATION,
+    CLINIC_NAME,
+    CLINIC_CITY,
+    CLINIC_STATE,
+    CONSULTATION_FEE,
+    YEARS_OF_EXPERIENCE,
+    RATING,
+    AVAILABLE_ONLINE,
+    PHONE,
+    LICENSE_NUMBER,
+    JOINED_DATE,
+    LAST_UPDATED,
+    IS_ACTIVE
+FROM {{ source('healthcare_raw', 'doctors') }}
