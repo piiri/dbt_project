@@ -17,3 +17,5 @@ snapshot-paths:
 models:
   dbt_project:
     +materialized: view
+    marts:
+      +materialized: table
