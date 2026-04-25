@@ -20,11 +20,11 @@ Use these prompts sequentially with Cortex Code  to recreate this entire dbt pro
   a profiles.yml file with:
 
     • type: snowflake
-    • account: lga76011.us-east-1
-    • user: PCHAUHAN@PHDATA.IO
+    • account: **Your_account_name**
+    • user: "your_user_name**
     • authenticator: externalbrowser
-    • role: CORTEX_CODE_HOL
-    • warehouse: CORTEX_CODE_HOL
+    • role: **Your_role**
+    • warehouse: **your_Warehouse**
     • database: HEALTHCARE_DW
     • schema: ANALYTICS
     • threads: 4
