@@ -15,17 +15,19 @@ Use these prompts sequentially with Cortex Code  to recreate this entire dbt pro
 
 ## Prompt 1 — Configure the dbt Project
 
-> I have a fresh dbt project called `dbt_project` targeting Snowflake. Configure it:
->
-> **profiles.yml** — Set up a Snowflake connection with:
-> - account: `<your-account>`
-> - user: `<your-user>`
-> - authenticator: externalbrowser
-> - role: `CORTEX_CODE_HOL`
-> - warehouse: `CORTEX_CODE_HOL`
-> - database: `HEALTHCARE_DW`
-> - schema: `ANALYTICS`
-> - threads: 4
+> I have a fresh dbt project called
+  dbt_project targeting Snowflake. Create
+  a profiles.yml file with:
+
+    • type: snowflake
+    • account: lga76011.us-east-1
+    • user: PCHAUHAN@PHDATA.IO
+    • authenticator: externalbrowser
+    • role: CORTEX_CODE_HOL
+    • warehouse: CORTEX_CODE_HOL
+    • database: HEALTHCARE_DW
+    • schema: ANALYTICS
+    • threads: 4
 >
 > **dbt_project.yml** — Set the default materialization to `view`, and override the `marts` subfolder to materialize as `table`.
 
@@ -33,18 +35,8 @@ Use these prompts sequentially with Cortex Code  to recreate this entire dbt pro
 
 ## Prompt 2 — Define Sources
 
-> Create `models/sources.yml` to define a source called `healthcare_raw` pointing to `HEALTHCARE_DW.RAW`. It has 6 tables:
->
-> 1. **patients** — Patient registration and demographics. Key: `PATIENT_ID`. Has `LAST_UPDATED` for change tracking. Columns that change over time: address, insurance, phone.
-> 2. **doctors** — Doctor directory. Key: `DOCTOR_ID`. Has `LAST_UPDATED`. Columns that change: specialization, clinic, consultation fee.
-> 3. **consultations** — Patient-doctor consultation events. Key: `CONSULTATION_ID`. Has `DIAGNOSIS_CODE` (ICD-10) and `CONSULTATION_TYPE` (In-Person/Online).
-> 4. **prescriptions** — Medicines prescribed during consultations. Key: `PRESCRIPTION_ID`. FK to `CONSULTATION_ID`.
-> 5. **orders** — Medicine orders. Key: `ORDER_ID`. Status changes over time (Placed → Processing → Shipped → Delivered/Cancelled). Has `LAST_UPDATED`.
-> 6. **payments** — Payment transactions for orders. Key: `PAYMENT_ID`. Has `PAYMENT_METHOD` and `PAYMENT_STATUS`.
->
-> Add descriptions for each table and document the key columns.
-
----
+> Explore the tables in HEALTHCARE_DW.RAW and create a sources.yml with descriptions 
+for all tables and key columns
 
 ## Prompt 3 — Create Staging Models
 
