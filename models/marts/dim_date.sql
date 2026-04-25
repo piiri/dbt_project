@@ -20,7 +20,7 @@ SELECT
     DAY(date_day)                                      AS day_of_month,
     DAYOFWEEK(date_day)                                AS day_of_week,
     DAYNAME(date_day)                                  AS day_name,
-    CASE WHEN DAYNAME(date_day) IN ('Sat', 'Sun') THEN TRUE ELSE FALSE END AS is_weekend,
+    CASE WHEN DAYOFWEEK(date_day) IN (0, 6) THEN TRUE ELSE FALSE END AS is_weekend,
     'Q' || QUARTER(date_day) || ' ' || YEAR(date_day)  AS quarter_label,
     MONTHNAME(date_day) || ' ' || YEAR(date_day)        AS month_label
 FROM date_spine

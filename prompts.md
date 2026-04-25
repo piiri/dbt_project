@@ -1,6 +1,6 @@
 # Prompts to Build This dbt Healthcare Data Warehouse from Scratch
 
-Use these prompts sequentially with Cortex Code (or any AI coding assistant) to recreate this entire dbt project on Snowflake. Each prompt builds on the previous one.
+Use these prompts sequentially with Cortex Code  to recreate this entire dbt project on Snowflake. Each prompt builds on the previous one.
 
 ---
 
