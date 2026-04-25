@@ -3,11 +3,11 @@ dbt_project:
   outputs:
     dev:
       type: snowflake
-      account: lga76011.us-east-1
-      user: PCHAUHAN@PHDATA.IO
+      account: **your-account-name**
+      user: **your username**
       authenticator: externalbrowser
-      role: CORTEX_CODE_HOL
-      warehouse: CORTEX_CODE_HOL
+      role: **your_role**
+      warehouse: **Your_warehouse
       database: HEALTHCARE_DW
       schema: ANALYTICS
       threads: 4
